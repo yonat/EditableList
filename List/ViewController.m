@@ -8,6 +8,12 @@
 
 #import "ViewController.h"
 
+#define TAG_TEXT_FIELD 100
+
+static NSString *inactiveTextFieldHint = @"Tap to add item";
+static NSString *activeTextFieldHint = @"Type to add item";
+
+
 @interface ViewController () <UITextFieldDelegate> {
     NSMutableArray *rowsContent;
 }
@@ -55,9 +61,15 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     }
 
-    UITextField *textField = (UITextField *)[cell viewWithTag:100];
+    UITextField *textField = (UITextField *)[cell viewWithTag:TAG_TEXT_FIELD];
     textField.delegate = self;
-    textField.text = indexPath.row < rowsContent.count ? [rowsContent objectAtIndex:indexPath.row] : nil;
+    if (indexPath.row < rowsContent.count) {
+        textField.text = [rowsContent objectAtIndex:indexPath.row];
+        textField.placeholder = nil;
+    } else {
+        textField.text = nil;
+        textField.placeholder = inactiveTextFieldHint;
+    }
 
     return cell;
 }
@@ -73,7 +85,7 @@
             
         case UITableViewCellEditingStyleInsert: {
             UITableViewCell *sourceCell = [tableView cellForRowAtIndexPath:indexPath];
-            UIView *textField = [sourceCell viewWithTag:100];
+            UIView *textField = [sourceCell viewWithTag:TAG_TEXT_FIELD];
             [textField becomeFirstResponder];
             break;
         }
@@ -104,6 +116,13 @@
 
 #pragma mark - UITextFieldDelegate
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if ([textField.text length] == 0) {
+        textField.placeholder = activeTextFieldHint;
+    }
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
 	[textField resignFirstResponder];
@@ -118,8 +137,13 @@
             [self deleteRow:currRow];
         }
     }
-    else if ([textField.text length]) { // new row
-        [self addRow:currRow text:textField.text];
+    else { // new row
+        if ([textField.text length]) {
+            [self addRow:currRow text:textField.text];
+        }
+        else {
+            textField.placeholder = inactiveTextFieldHint;
+        }
     }
 	return YES;
 }
@@ -131,13 +155,6 @@
     [super viewDidLoad];
 	rowsContent = [NSMutableArray arrayWithObjects:@"First note", @"Another one", nil];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
