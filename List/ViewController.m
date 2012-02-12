@@ -8,28 +8,32 @@
 
 #import "ViewController.h"
 
-@interface UITableView (CellAccess)
-- (UITableViewCell *)visibleCellForIndexPath:(NSIndexPath *)indexPath;
-@end
-@implementation UITableView (CellAccess)
-- (UITableViewCell *)visibleCellForIndexPath:(NSIndexPath *)indexPath
-{
-    NSArray *cells = [self visibleCells];
-    for (UITableViewCell *cell in cells) {
-        if ([[self indexPathForCell:cell] isEqual:indexPath]) {
-            return cell;
-        }
-    }
-    return nil;
-}
-@end
-
 @interface ViewController () <UITextFieldDelegate> {
     NSMutableArray *rowsContent;
 }
 @end
 
 @implementation ViewController
+
+#pragma mark - Table Changes
+
+- (void)deleteRow:(NSIndexPath *)indexPath
+{
+    [rowsContent removeObjectAtIndex:indexPath.row];
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
+    [self.tableView endUpdates];
+}
+
+- (void)addRow:(NSIndexPath *)indexPath text:(NSString *)text
+{
+    [rowsContent addObject:text];
+    NSIndexPath *nextRow = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:nextRow] withRowAnimation:UITableViewRowAnimationMiddle];
+    [self.tableView endUpdates];
+}
 
 #pragma mark - Table View Data Source
 
@@ -63,15 +67,12 @@
     switch (editingStyle) {
 
         case UITableViewCellEditingStyleDelete: {
-            [rowsContent removeObjectAtIndex:indexPath.row];
-            [self.tableView beginUpdates];
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
-            [self.tableView endUpdates];
+            [self deleteRow:indexPath];
             break;
         }
             
         case UITableViewCellEditingStyleInsert: {
-            UITableViewCell *sourceCell = [tableView visibleCellForIndexPath:indexPath];
+            UITableViewCell *sourceCell = [tableView cellForRowAtIndexPath:indexPath];
             UIView *textField = [sourceCell viewWithTag:100];
             [textField becomeFirstResponder];
             break;
@@ -107,18 +108,18 @@
 {
 	[textField resignFirstResponder];
     UITableViewCell *parentCell = (UITableViewCell *)[[textField superview] superview];
-    NSUInteger cellIndex = [self.tableView indexPathForCell:parentCell].row;
+    NSIndexPath *currRow = [self.tableView indexPathForCell:parentCell];
+    NSUInteger cellIndex = currRow.row;
     if (cellIndex < rowsContent.count) {
-        [rowsContent replaceObjectAtIndex:cellIndex withObject:textField.text];
+        if ([textField.text length]) {
+            [rowsContent replaceObjectAtIndex:cellIndex withObject:textField.text];
+        }
+        else {
+            [self deleteRow:currRow];
+        }
     }
-    else {
-        [rowsContent addObject:textField.text];
-        NSIndexPath *currRow = [NSIndexPath indexPathForRow:cellIndex inSection:0];
-        NSIndexPath *nextRow = [NSIndexPath indexPathForRow:cellIndex+1 inSection:0];
-        [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:currRow] withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:nextRow] withRowAnimation:UITableViewRowAnimationMiddle];
-        [self.tableView endUpdates];
+    else if ([textField.text length]) { // new row
+        [self addRow:currRow text:textField.text];
     }
 	return YES;
 }
