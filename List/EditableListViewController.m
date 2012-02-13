@@ -79,9 +79,10 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 - (UITextField *)createTextFieldForCell:(UITableViewCell *)cell
 {
-    CGRect frame = CGRectInset(cell.contentView.bounds, 8.0f, 2.0f);
+    CGFloat padding = 8.0f;
+    CGRect frame = CGRectInset(cell.contentView.bounds, padding, padding / 2);
     UITextField *textField = [[UITextField alloc] initWithFrame:frame];
-    CGFloat d = frame.size.height - textField.font.pointSize - 2;
+    CGFloat d = frame.size.height - textField.font.pointSize - padding;
     frame.origin.y += d;
     frame.size.height -=d;
     textField.frame = frame;
