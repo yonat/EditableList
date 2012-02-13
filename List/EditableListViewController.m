@@ -7,8 +7,6 @@
 
 #import "EditableListViewController.h"
 
-#define TAG_TEXT_FIELD 10000
-
 static NSString *inactiveTextFieldHint = @"Tap to add item";
 static NSString *activeTextFieldHint = @"Type to add item";
 
@@ -19,6 +17,19 @@ static NSString *activeTextFieldHint = @"Type to add item";
 @end
 
 @implementation EditableListViewController
+
+#pragma Contents Assignment
+
+- (NSArray *)contents
+{
+    return rowsContent; // toDO: should use arrayWithArray:?
+}
+
+- (void)setContents:(NSArray *)contents
+{
+    rowsContent = [NSMutableArray arrayWithArray:contents];
+    [self.tableView reloadData];
+}
 
 #pragma mark - Table Changes
 
@@ -32,6 +43,9 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 - (void)addRow:(NSIndexPath *)indexPath text:(NSString *)text
 {
+    if (rowsContent == nil) {
+        rowsContent = [[NSMutableArray alloc] initWithCapacity:1];
+    }
     [rowsContent addObject:text];
     NSIndexPath *nextRow = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
     [self.tableView beginUpdates];
@@ -52,9 +66,24 @@ static NSString *activeTextFieldHint = @"Type to add item";
     return rowsContent.count + 1; // extra one for inserting new row
 }
 
+- (UITextField *)createTextFieldForCell:(UITableViewCell *)cell
+{
+    CGRect frame = CGRectInset(cell.contentView.bounds, 8.0f, 2.0f);
+    UITextField *textField = [[UITextField alloc] initWithFrame:frame];
+    CGFloat d = frame.size.height - textField.font.pointSize - 2;
+    frame.origin.y += d;
+    frame.size.height -=d;
+    textField.frame = frame;
+    textField.tag = TAG_TEXT_FIELD;
+    textField.borderStyle = UITextBorderStyleNone;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    return textField;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *reuseIdentifier = @"EditableTextCell";
+    static NSString *reuseIdentifier = CELL_REUSE_IDENTIFIER;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
@@ -62,16 +91,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
     UITextField *textField = (UITextField *)[cell viewWithTag:TAG_TEXT_FIELD];
     if (textField == nil) {
-        CGRect frame = CGRectInset(cell.contentView.bounds, 8.0f, 2.0f);
-        textField = [[UITextField alloc] initWithFrame:frame];
-        CGFloat d = frame.size.height - textField.font.pointSize - 2;
-        frame.origin.y += d;
-        frame.size.height -=d;
-        textField.frame = frame;
-        textField.tag = TAG_TEXT_FIELD;
-        textField.borderStyle = UITextBorderStyleNone;
-        textField.returnKeyType = UIReturnKeyDone;
-        textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        textField = [self createTextFieldForCell:cell];
         [cell.contentView addSubview:textField];
     }
     textField.delegate = self;
@@ -165,7 +185,6 @@ static NSString *activeTextFieldHint = @"Type to add item";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	rowsContent = [NSMutableArray arrayWithObjects:@"First note", @"Another one", nil];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 

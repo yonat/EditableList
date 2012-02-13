@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "EditableListViewController.h"
 
 @implementation AppDelegate
 
@@ -14,7 +15,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    UINavigationController *root = (UINavigationController *)self.window.rootViewController;
+    EditableListViewController *list = (EditableListViewController *)root.topViewController;
+    list.contents = [NSArray arrayWithObjects:@"First note", @"Another one", nil];
     return YES;
 }
 							
