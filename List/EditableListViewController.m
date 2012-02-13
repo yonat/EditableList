@@ -138,11 +138,16 @@ static NSString *activeTextFieldHint = @"Type to add item";
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return indexPath.row < rowsContent.count;
+}
+
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    NSString *rowToMove = [rowsContent objectAtIndex:fromIndexPath.row];
+    NSString *rowContent = [rowsContent objectAtIndex:fromIndexPath.row];
     [rowsContent removeObjectAtIndex:fromIndexPath.row];
-    [rowsContent insertObject:rowToMove atIndex:toIndexPath.row];
+    [rowsContent insertObject:rowContent atIndex:toIndexPath.row];
     [self notifyContentsChanged];
 }
 
@@ -153,9 +158,13 @@ static NSString *activeTextFieldHint = @"Type to add item";
     return indexPath.row < rowsContent.count ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleInsert;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+- (NSIndexPath *)tableView:(UITableView *)tableView
+    targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath
+    toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {
-    return indexPath.row < rowsContent.count;
+    return proposedDestinationIndexPath.row < rowsContent.count
+        ? proposedDestinationIndexPath
+        : [NSIndexPath indexPathForRow:rowsContent.count-1 inSection:0];
 }
 
 #pragma mark - UITextFieldDelegate
