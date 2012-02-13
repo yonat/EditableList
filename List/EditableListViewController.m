@@ -178,6 +178,11 @@ static NSString *activeTextFieldHint = @"Type to add item";
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
 	[textField resignFirstResponder];
+	return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
     UITableViewCell *parentCell = (UITableViewCell *)[[textField superview] superview];
     NSIndexPath *currRow = [self.tableView indexPathForCell:parentCell];
     NSUInteger cellIndex = currRow.row;
@@ -198,7 +203,6 @@ static NSString *activeTextFieldHint = @"Type to add item";
             textField.placeholder = NSLocalizedString(inactiveTextFieldHint, nil);
         }
     }
-	return YES;
 }
 
 #pragma mark - View lifecycle
