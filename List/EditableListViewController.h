@@ -17,10 +17,17 @@
 #define TAG_TEXT_FIELD 10000
 #define CELL_REUSE_IDENTIFIER @"EditableTextCell"
 
+@protocol EditableListViewDelegate;
+
 @interface EditableListViewController : UITableViewController
 
 @property (nonatomic, copy) NSArray *contents;
+@property (nonatomic, weak) id<EditableListViewDelegate> delegate;
 
 - (UITextField *)createTextFieldForCell:(UITableViewCell *)cell;
 
+@end
+
+@protocol EditableListViewDelegate <NSObject>
+- (void)contentsDidChange:(EditableListViewController *)controller;
 @end
