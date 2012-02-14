@@ -18,7 +18,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 @implementation EditableListViewController
 
-@synthesize delegate;
+@synthesize listDelegate;
 
 #pragma Contents Assignment
 
@@ -37,8 +37,8 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 - (void)notifyContentsChanged
 {
-    if (delegate) {
-        [delegate contentsDidChange:self];
+    if (listDelegate) {
+        [listDelegate contentsDidChange:self];
     }
 }
 

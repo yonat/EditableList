@@ -22,7 +22,7 @@
 @interface EditableListViewController : UITableViewController
 
 @property (nonatomic, copy) NSArray *contents;
-@property (nonatomic, weak) id<EditableListViewDelegate> delegate;
+@property (nonatomic, weak) id<EditableListViewDelegate> listDelegate;
 
 - (UITextField *)createTextFieldForCell:(UITableViewCell *)cell;
 
