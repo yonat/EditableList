@@ -18,13 +18,11 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 @implementation EditableListViewController
 
-@synthesize listDelegate;
-
 #pragma Contents Assignment
 
 - (NSArray *)contents
 {
-    return rowsContent; // toDO: should use arrayWithArray:?
+    return rowsContent; // TODO: should use arrayWithArray:?
 }
 
 - (void)setContents:(NSArray *)contents
@@ -35,20 +33,13 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 #pragma mark - Table Changes
 
-- (void)notifyContentsChanged
-{
-    if (listDelegate) {
-        [listDelegate contentsDidChange:self];
-    }
-}
-
 - (void)deleteRow:(NSIndexPath *)indexPath
 {
     [rowsContent removeObjectAtIndex:indexPath.row];
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
     [self.tableView endUpdates];
-    [self notifyContentsChanged];
+    [self contentsDidChange];
 }
 
 - (void)addRow:(NSIndexPath *)indexPath text:(NSString *)text
@@ -62,7 +53,11 @@ static NSString *activeTextFieldHint = @"Type to add item";
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:nextRow] withRowAnimation:UITableViewRowAnimationMiddle];
     [self.tableView endUpdates];
-    [self notifyContentsChanged];
+    [self contentsDidChange];
+}
+
+- (void)contentsDidChange
+{
 }
 
 #pragma mark - Table View Data Source
@@ -148,7 +143,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
     NSString *rowContent = [rowsContent objectAtIndex:fromIndexPath.row];
     [rowsContent removeObjectAtIndex:fromIndexPath.row];
     [rowsContent insertObject:rowContent atIndex:toIndexPath.row];
-    [self notifyContentsChanged];
+    [self contentsDidChange];
 }
 
 #pragma mark - Table View Delegate
@@ -191,7 +186,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
     if (cellIndex < rowsContent.count) {
         if ([textField.text length]) {
             [rowsContent replaceObjectAtIndex:cellIndex withObject:textField.text];
-            [self notifyContentsChanged];
+            [self contentsDidChange];
         }
         else {
             [self deleteRow:currRow];

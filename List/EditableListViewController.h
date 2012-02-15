@@ -7,6 +7,7 @@
 //  Simple List, with inline editing and adding by typing the next row (a la Reminders.app)
 //  Supports swipe-to-delete, and edit mode with move/delete/add.
 //
+//  To be notified on content changes, override contentsDidChange (does nthing by default).
 //  To change properties of the text fields, either use a xib/storyboard or override createTextFieldForCell: .
 //  To change placeholder text, edit your bundle's .strings file entries "Tap to add item" and "Type to add item".
 //
@@ -22,12 +23,8 @@
 @interface EditableListViewController : UITableViewController
 
 @property (nonatomic, copy) NSArray *contents;
-@property (nonatomic, weak) id<EditableListViewDelegate> listDelegate;
 
+- (void)contentsDidChange;
 - (UITextField *)createTextFieldForCell:(UITableViewCell *)cell;
 
-@end
-
-@protocol EditableListViewDelegate <NSObject>
-- (void)contentsDidChange:(EditableListViewController *)controller;
 @end
