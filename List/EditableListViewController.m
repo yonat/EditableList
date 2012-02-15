@@ -140,7 +140,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.row < rowsContent.count;
+    return indexPath.section == 0 && indexPath.row < rowsContent.count;
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
@@ -155,6 +155,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section != 0) return UITableViewCellEditingStyleNone;
     return indexPath.row < rowsContent.count ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleInsert;
 }
 
@@ -162,7 +163,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
     targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath
     toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {
-    return proposedDestinationIndexPath.row < rowsContent.count
+    return proposedDestinationIndexPath.section == 0 && proposedDestinationIndexPath.row < rowsContent.count
         ? proposedDestinationIndexPath
         : [NSIndexPath indexPathForRow:rowsContent.count-1 inSection:0];
 }
