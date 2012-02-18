@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC9ACB5514EF7E0300FBD432 /* EditableListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC9ACB5414EF7E0300FBD432 /* EditableListViewController.m */; };
 		DCDA5B0014E7BE64008D7A44 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDA5AFF14E7BE64008D7A44 /* UIKit.framework */; };
 		DCDA5B0214E7BE64008D7A44 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDA5B0114E7BE64008D7A44 /* Foundation.framework */; };
 		DCDA5B0414E7BE64008D7A44 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDA5B0314E7BE64008D7A44 /* CoreGraphics.framework */; };
@@ -14,10 +15,11 @@
 		DCDA5B0C14E7BE64008D7A44 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDA5B0B14E7BE64008D7A44 /* main.m */; };
 		DCDA5B1014E7BE64008D7A44 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDA5B0F14E7BE64008D7A44 /* AppDelegate.m */; };
 		DCDA5B1314E7BE64008D7A44 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCDA5B1114E7BE64008D7A44 /* MainStoryboard.storyboard */; };
-		DCDA5B1614E7BE64008D7A44 /* EditableListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDA5B1514E7BE64008D7A44 /* EditableListViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC9ACB5314EF7E0300FBD432 /* EditableListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableListViewController.h; sourceTree = SOURCE_ROOT; };
+		DC9ACB5414EF7E0300FBD432 /* EditableListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableListViewController.m; sourceTree = SOURCE_ROOT; };
 		DCDA5AFB14E7BE64008D7A44 /* List.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = List.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCDA5AFF14E7BE64008D7A44 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		DCDA5B0114E7BE64008D7A44 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -29,8 +31,6 @@
 		DCDA5B0E14E7BE64008D7A44 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		DCDA5B0F14E7BE64008D7A44 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		DCDA5B1214E7BE64008D7A44 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		DCDA5B1414E7BE64008D7A44 /* EditableListViewController.h */ = {isa = PBXFileReference; path = EditableListViewController.h; sourceTree = "<group>"; };
-		DCDA5B1514E7BE64008D7A44 /* EditableListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditableListViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,8 +80,8 @@
 				DCDA5B0E14E7BE64008D7A44 /* AppDelegate.h */,
 				DCDA5B0F14E7BE64008D7A44 /* AppDelegate.m */,
 				DCDA5B1114E7BE64008D7A44 /* MainStoryboard.storyboard */,
-				DCDA5B1414E7BE64008D7A44 /* EditableListViewController.h */,
-				DCDA5B1514E7BE64008D7A44 /* EditableListViewController.m */,
+				DC9ACB5314EF7E0300FBD432 /* EditableListViewController.h */,
+				DC9ACB5414EF7E0300FBD432 /* EditableListViewController.m */,
 				DCDA5B0614E7BE64008D7A44 /* Supporting Files */,
 			);
 			path = List;
@@ -163,7 +163,7 @@
 			files = (
 				DCDA5B0C14E7BE64008D7A44 /* main.m in Sources */,
 				DCDA5B1014E7BE64008D7A44 /* AppDelegate.m in Sources */,
-				DCDA5B1614E7BE64008D7A44 /* EditableListViewController.m in Sources */,
+				DC9ACB5514EF7E0300FBD432 /* EditableListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
