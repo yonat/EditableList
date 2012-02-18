@@ -83,6 +83,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
     textField.tag = TAG_TEXT_FIELD;
     textField.borderStyle = UITextBorderStyleNone;
     textField.returnKeyType = UIReturnKeyDone;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
     textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     return textField;
 }
@@ -185,8 +186,10 @@ static NSString *activeTextFieldHint = @"Type to add item";
     NSUInteger cellIndex = currRow.row;
     if (cellIndex < rowsContent.count) {
         if ([textField.text length]) {
-            [rowsContent replaceObjectAtIndex:cellIndex withObject:textField.text];
-            [self contentsDidChange];
+            if (![textField.text isEqualToString:[rowsContent objectAtIndex:cellIndex]]) {
+                [rowsContent replaceObjectAtIndex:cellIndex withObject:textField.text];
+                [self contentsDidChange];
+            }
         }
         else {
             [self deleteRow:currRow];
