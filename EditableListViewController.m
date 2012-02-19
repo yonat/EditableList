@@ -22,7 +22,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 - (NSArray *)contents
 {
-    return rowsContent; // TODO: should use arrayWithArray:?
+    return rowsContent;
 }
 
 - (void)setContents:(NSArray *)contents
