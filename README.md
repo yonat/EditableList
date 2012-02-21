@@ -1,5 +1,7 @@
 **EditableListViewController - Simple List of UITextField-s based on UITableViewController**
 
+<img src="http://ootips.org/yonat/wp-content/uploads/2012/02/EditableList.png" style="float:right;">
+
 A simple list of text fields, similar to Reminders.app, featuring:
 
 - Inline editing.
