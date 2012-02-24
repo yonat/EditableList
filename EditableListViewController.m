@@ -133,6 +133,11 @@ static NSString *activeTextFieldHint = @"Type to add item";
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return (indexPath.section == 0);
+}
+
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return indexPath.section == 0 && indexPath.row < rowsContent.count;
