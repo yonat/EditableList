@@ -7,8 +7,24 @@
 #import "EditableListViewController.h"
 
 static NSString *inactiveTextFieldHint = @"Tap to add item";
-static NSString *activeTextFieldHint = @"Type to add item";
+static NSString *activeTextFieldHint = @"";
+static NSString *returnTappedTextFieldHint = @"~"; // HACK to mark when return was tapped
 
+#pragma mark - Helper Categories
+
+@interface UITextField (ChangeReturnKey)
+- (void)changeReturnKey:(UIReturnKeyType)returnKeyType;
+@end
+
+@implementation UITextField (ChangeReturnKey)
+- (void)changeReturnKey:(UIReturnKeyType)returnKeyType
+{
+    self.returnKeyType = returnKeyType;
+    [self reloadInputViews];
+}
+@end
+
+#pragma mark - EditableListViewController
 
 @interface EditableListViewController () <UITextFieldDelegate> {
     NSMutableArray *rowsContent;
@@ -17,7 +33,7 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 @implementation EditableListViewController
 
-#pragma Contents Assignment
+#pragma mark - Contents Assignment
 
 - (NSArray *)contents
 {
@@ -170,6 +186,17 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 #pragma mark - UITextFieldDelegate
 
+- (NSIndexPath *)cellIndexPathForField:(UITextField *)textField
+{
+    UITableViewCell *parentCell = (UITableViewCell *)[[textField superview] superview];
+    return [self.tableView indexPathForCell:parentCell];
+}
+
+- (NSUInteger)rowIndexForField:(UITextField *)textField
+{
+    return [self cellIndexPathForField:textField].row;
+}
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     if ([textField.text length] == 0) {
@@ -179,14 +206,41 @@ static NSString *activeTextFieldHint = @"Type to add item";
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    textField.placeholder = returnTappedTextFieldHint;
 	[textField resignFirstResponder];
 	return YES;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField.text.length == 0) {
+        // if it's the last field, change the return key to "Next"
+        if ([self rowIndexForField:textField] == rowsContent.count) {
+            [textField changeReturnKey:UIReturnKeyNext];
+        }
+    }
+    else {
+        // if return button is "Next" and field is about to be empty, change to "Done"
+        if (textField.returnKeyType == UIReturnKeyNext && string.length == 0 && range.length == textField.text.length) {
+            [textField changeReturnKey:UIReturnKeyDone];
+        }
+    }
+
+    return YES;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    if (textField.returnKeyType == UIReturnKeyNext) {
+        [textField changeReturnKey:UIReturnKeyDone];
+    }
+    
+    return YES;
+}
+
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    UITableViewCell *parentCell = (UITableViewCell *)[[textField superview] superview];
-    NSIndexPath *currRow = [self.tableView indexPathForCell:parentCell];
+    NSIndexPath *currRow = [self cellIndexPathForField:textField];
     NSUInteger cellIndex = currRow.row;
     if (cellIndex < rowsContent.count) {
         if ([textField.text length]) {
@@ -202,6 +256,12 @@ static NSString *activeTextFieldHint = @"Type to add item";
     else { // new row
         if ([textField.text length]) {
             [self addRow:currRow text:textField.text];
+            [textField changeReturnKey:UIReturnKeyDone];
+            if ([textField.placeholder isEqual:returnTappedTextFieldHint]) { // if tapped return, go to the next field
+                UITableViewCell *nextCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:cellIndex+1 inSection:currRow.section]];
+                UIView *nextTextField = [nextCell viewWithTag:TAG_TEXT_FIELD];
+                [nextTextField becomeFirstResponder];
+            }
         }
         else {
             textField.placeholder = NSLocalizedString(inactiveTextFieldHint, nil);
