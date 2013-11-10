@@ -184,12 +184,20 @@ static NSString *returnTappedTextFieldHint = @"~"; // HACK to mark when return w
         : [NSIndexPath indexPathForRow:rowsContent.count-1 inSection:0];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
 #pragma mark - UITextFieldDelegate
 
 - (NSIndexPath *)cellIndexPathForField:(UITextField *)textField
 {
-    UITableViewCell *parentCell = (UITableViewCell *)[[textField superview] superview];
-    return [self.tableView indexPathForCell:parentCell];
+    UIView *view = textField;
+    while (![view isKindOfClass:[UITableViewCell class]]) {
+        view = [view superview];
+    }
+    return [self.tableView indexPathForCell:(UITableViewCell *)view];
 }
 
 - (NSUInteger)rowIndexForField:(UITextField *)textField
