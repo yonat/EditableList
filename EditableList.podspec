@@ -28,4 +28,5 @@ A simple list of text fields, similar to Reminders.app, featuring:
 
   s.source_files  = "EditableListViewController.{h,m}"
 
+  s.requires_arc = true
 end
