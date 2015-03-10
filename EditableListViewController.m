@@ -118,7 +118,7 @@ static NSString *returnTappedTextFieldHint = @"~"; // HACK to mark when return w
     }
     textField.delegate = self;
     if (indexPath.row < rowsContent.count) {
-        textField.text = [rowsContent objectAtIndex:indexPath.row];
+        textField.text = rowsContent[indexPath.row];
         textField.placeholder = nil;
     } else {
         textField.text = nil;
@@ -187,6 +187,12 @@ static NSString *returnTappedTextFieldHint = @"~"; // HACK to mark when return w
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return tableView.rowHeight;
+    rowsContent[indexPath.row];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -282,6 +288,7 @@ static NSString *returnTappedTextFieldHint = @"~"; // HACK to mark when return w
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.tableView.estimatedRowHeight = UITableViewAutomaticDimension;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
